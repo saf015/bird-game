@@ -21,7 +21,7 @@ canvas {
   z-index: 1;
 }
 
-/* HOME SCREEN */
+/* HOME */
 #home {
   position: fixed;
   inset: 0;
@@ -36,11 +36,15 @@ canvas {
 #home button {
   width: 220px;
   padding: 12px;
-  margin: 8px;
+  margin: 6px;
   font-size: 18px;
 }
 
-/* ACHIEVEMENT SCREEN */
+#themeMenu {
+  display: none;
+}
+
+/* ACHIEVEMENTS */
 #achievements {
   position: fixed;
   inset: 0;
@@ -55,7 +59,7 @@ canvas {
 }
 
 #achievements button {
-  margin-top: 20px;
+  margin-top: 15px;
   padding: 10px 20px;
 }
 
@@ -68,7 +72,7 @@ canvas {
   display: none;
 }
 
-/* GAME OVER BOX */
+/* GAME OVER */
 #retryBtn {
   position: fixed;
   left: 50%;
@@ -91,11 +95,19 @@ canvas {
 <div id="home">
   <h1>Flappy Bird</h1>
   <button onclick="startGame()">▶ Start Game</button>
+  <button onclick="toggleThemeMenu()">🎨 Theme</button>
+
+  <div id="themeMenu">
+    <button onclick="selectTheme('city')">🏙 City</button>
+    <button onclick="selectTheme('night')">🌙 Night</button>
+    <button onclick="selectTheme('sunny')">☀ Sunny</button>
+  </div>
+
   <button onclick="showAchievements()">📊 Achievements</button>
   <button onclick="exitGame()">❌ Exit</button>
 </div>
 
-<!-- ACHIEVEMENT SCREEN -->
+<!-- ACHIEVEMENTS -->
 <div id="achievements">
   <h2>🏆 Medal System</h2>
   <p id="medalInfo"></p>
@@ -144,13 +156,29 @@ const pipeBottomImg = new Image();
 
 pipeTopImg.src = "img/up.png";
 pipeBottomImg.src = "img/down.png";
-bgImg.src = "img/city.png";
-birdImg.src = "img/greenbird.png";
+
+/* THEMES */
+const themes = {
+  city: { bg: "img/city.png", bird: "img/greenbird.png" },
+  night: { bg: "img/night.png", bird: "img/bird1-removebg-preview.png" },
+  sunny: { bg: "img/sunny.png", bird: "img/birdwhite-removebg-preview.png" }
+};
+
+function loadTheme(name) {
+  bgImg.src = themes[name].bg;
+  birdImg.src = themes[name].bird;
+}
+
+loadTheme("city");
 
 /* SOUND */
 const flapSound = new Audio("audio/flap.mp3");
 const hitSound = new Audio("audio/hit.mp3");
 const scoreSound = new Audio("audio/score.wav");
+const bgMusic = new Audio("audio/bg.mpeg");
+
+bgMusic.loop = true;
+bgMusic.volume = 0.5;
 
 /* GAME STATE */
 let bird, pipes, frame, score;
@@ -172,17 +200,19 @@ function addPipe() {
   pipes.push({ x: GAME_WIDTH, top: Math.random() * 180 + 40, passed: false });
 }
 
+/* MEDAL */
 function getMedal(score) {
-  if (score >= 30) return "🥇 Gold Medal";
-  if (score >= 15) return "🥈 Silver Medal";
-  if (score >= 5) return "🥉 Bronze Medal";
-  return "No Medal 😢";
+  if (score >= 30) return "🥇 Gold";
+  if (score >= 15) return "🥈 Silver";
+  if (score >= 5) return "🥉 Bronze";
+  return "No Medal";
 }
 
 function endGame() {
   if (gameOver) return;
 
   hitSound.play();
+  bgMusic.pause();
   gameOver = true;
   recentScore = score;
 
@@ -191,11 +221,9 @@ function endGame() {
     localStorage.setItem("highScore", highScore);
   }
 
-  const medal = getMedal(score);
-
   document.getElementById("retryBtn").innerHTML =
     "Game Over<br><br>" +
-    medal + "<br><br>" +
+    getMedal(score) + "<br><br>" +
     "Score: " + score +
     "<br>High Score: " + highScore +
     "<br><br>🔁 Retry";
@@ -267,7 +295,6 @@ function loop() {
 function flap() {
   if (waiting) {
     waiting = false;
-    playing = true;
     bird.v = -6;
     flapSound.play();
     return;
@@ -287,6 +314,8 @@ function startGame() {
   resetGame();
   waiting = true;
   playing = true;
+  bgMusic.currentTime = 0;
+  bgMusic.play();
   document.getElementById("home").style.display = "none";
   document.getElementById("ui").style.display = "block";
 }
@@ -295,14 +324,27 @@ function retryGame() {
   resetGame();
   waiting = true;
   playing = true;
+  bgMusic.currentTime = 0;
+  bgMusic.play();
   document.getElementById("retryBtn").style.display = "none";
 }
 
 function goHome() {
   playing = false;
+  bgMusic.pause();
   document.getElementById("home").style.display = "flex";
   document.getElementById("ui").style.display = "none";
   document.getElementById("retryBtn").style.display = "none";
+}
+
+function toggleThemeMenu() {
+  const m = document.getElementById("themeMenu");
+  m.style.display = m.style.display === "block" ? "none" : "block";
+}
+
+function selectTheme(name) {
+  loadTheme(name);
+  document.getElementById("themeMenu").style.display = "none";
 }
 
 function showAchievements() {
@@ -328,7 +370,6 @@ function exitGame() {
   alert("Thanks for playing!");
 }
 
-/* INIT */
 resetGame();
 loop();
 </script>
