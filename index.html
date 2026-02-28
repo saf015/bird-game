@@ -33,25 +33,51 @@ canvas {
   z-index: 10;
 }
 
-#home button {
-  width: 220px;
-  padding: 12px;
+/* Main Home Buttons */
+.home-btn {
+  width: 200px;
+  padding: 10px;
   margin: 6px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
-/* iABOUT BUTTON - bottom right */
+/* Small Round Button */
+.small-round {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 18px;
+  padding: 0;
+}
+
+/* iABOUT bottom right */
 #iaboutBtn {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
+  bottom: 15px;
+  right: 15px;
 }
 
-/* THEME */
+/* Theme round button */
+#themeToggle {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+/* Theme Menu Row */
 #themeMenu {
   display: none;
+  margin-top: 10px;
+}
+
+.theme-row {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-row button {
+  padding: 8px 10px;
+  font-size: 14px;
 }
 
 /* ACHIEVEMENTS */
@@ -68,7 +94,7 @@ canvas {
   text-align: center;
 }
 
-/* IABOUT SCREEN */
+/* IABOUT */
 #iaboutScreen {
   position: fixed;
   inset: 0;
@@ -92,14 +118,19 @@ canvas {
   display: none;
 }
 
+#ui button {
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
 /* GAME OVER */
 #retryBtn {
   position: fixed;
   left: 50%;
   top: 55%;
   transform: translate(-50%, -50%);
-  padding: 25px 45px;
-  font-size: 20px;
+  padding: 20px 40px;
+  font-size: 18px;
   font-weight: bold;
   text-align: center;
   border-radius: 12px;
@@ -115,20 +146,25 @@ canvas {
 <!-- HOME -->
 <div id="home">
   <h1>Flappy Bird</h1>
-  <button onclick="startGame()">▶ Start Game</button>
-  <button onclick="toggleThemeMenu()">🎨 Theme</button>
 
+  <button class="home-btn" onclick="startGame()">▶ Start Game</button>
+  <button class="home-btn" onclick="showAchievements()">📊 Achievements</button>
+  <button class="home-btn" onclick="exitGame()">❌ Exit</button>
+
+  <!-- Small Round Theme Button -->
+  <button id="themeToggle" class="small-round" onclick="toggleThemeMenu()">🎨</button>
+
+  <!-- Theme Row -->
   <div id="themeMenu">
-    <button onclick="selectTheme('city')">🏙 City</button>
-    <button onclick="selectTheme('night')">🌙 Night</button>
-    <button onclick="selectTheme('sunny')">☀ Sunny</button>
+    <div class="theme-row">
+      <button onclick="selectTheme('city')">🏙</button>
+      <button onclick="selectTheme('night')">🌙</button>
+      <button onclick="selectTheme('sunny')">☀</button>
+    </div>
   </div>
 
-  <button onclick="showAchievements()">📊 Achievements</button>
-  <button onclick="exitGame()">❌ Exit</button>
-
-  <!-- iABOUT BUTTON -->
-  <button id="iaboutBtn" onclick="showIAbout()">ℹ iAbout</button>
+  <!-- Small iAbout -->
+  <button id="iaboutBtn" class="small-round" onclick="showIAbout()">ℹ</button>
 </div>
 
 <!-- ACHIEVEMENTS -->
@@ -140,22 +176,17 @@ canvas {
   <button onclick="closeAchievements()">⬅ Back</button>
 </div>
 
-<!-- IABOUT SCREEN -->
+<!-- IABOUT -->
 <div id="iaboutScreen">
   <h2>Founder</h2>
-
   <p><strong>Safani Fathima</strong></p>
   <p><strong>Sandhiya</strong></p>
-
   <br>
-
   <p>
     We created this game to make learning and coding fun.<br>
     Our goal is to build creative and exciting projects together.
   </p>
-
   <br>
-
   <button onclick="closeIAbout()">⬅ Back</button>
 </div>
 
@@ -245,7 +276,6 @@ function getMedal(score) {
 
 function endGame() {
   if (gameOver) return;
-
   hitSound.play();
   bgMusic.pause();
   gameOver = true;
@@ -268,16 +298,13 @@ function endGame() {
 
 function update() {
   if (!playing || gameOver || waiting) return;
-
   frame++;
   bird.v += 0.35;
   bird.y += bird.v;
-
   if (frame % 95 === 0) addPipe();
 
   pipes.forEach(p => {
     p.x -= 1.6;
-
     if (!p.passed && p.x + 52 < bird.x) {
       p.passed = true;
       score++;
@@ -287,13 +314,11 @@ function update() {
     const pipeWidth = 52;
     const gap = 180;
 
-    const collideX = bird.x + bird.w > p.x &&
-                     bird.x < p.x + pipeWidth;
-
-    const collideTop = bird.y < p.top;
-    const collideBottom = bird.y + bird.h > p.top + gap;
-
-    if (collideX && (collideTop || collideBottom)) {
+    if (
+      bird.x + bird.w > p.x &&
+      bird.x < p.x + pipeWidth &&
+      (bird.y < p.top || bird.y + bird.h > p.top + gap)
+    ) {
       endGame();
     }
   });
@@ -304,7 +329,6 @@ function update() {
 function draw() {
   ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
   ctx.drawImage(bgImg, 0, 0, GAME_WIDTH, GAME_HEIGHT);
   ctx.drawImage(birdImg, bird.x, bird.y, bird.w, bird.h);
 
@@ -315,9 +339,9 @@ function draw() {
 
   ctx.setTransform(1,0,0,1,0,0);
   ctx.fillStyle = "white";
-  ctx.font = "bold 20px Arial";
+  ctx.font = "bold 18px Arial";
   ctx.fillText("HIGH SCORE: " + highScore, 20, 40);
-  ctx.fillText("SCORE: " + score, 20, 70);
+  ctx.fillText("SCORE: " + score, 20, 65);
 }
 
 function loop() {
@@ -385,15 +409,9 @@ function selectTheme(name) {
 function showAchievements() {
   document.getElementById("home").style.display = "none";
   document.getElementById("achievements").style.display = "flex";
-
-  document.getElementById("medalInfo").innerHTML =
-    "Current Medal: " + getMedal(highScore);
-
-  document.getElementById("recentScore").innerHTML =
-    "🎯 Recent Score: " + recentScore;
-
-  document.getElementById("bestScore").innerHTML =
-    "🥇 High Score: " + highScore;
+  document.getElementById("medalInfo").innerHTML = "Current Medal: " + getMedal(highScore);
+  document.getElementById("recentScore").innerHTML = "🎯 Recent Score: " + recentScore;
+  document.getElementById("bestScore").innerHTML = "🥇 High Score: " + highScore;
 }
 
 function closeAchievements() {
