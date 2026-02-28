@@ -58,11 +58,7 @@ canvas {
 }
 
 /* Theme round button */
-#themeToggle {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-}
+
 
 /* Theme Menu Row */
 #themeMenu {
@@ -148,20 +144,24 @@ canvas {
   <h1>Flappy Bird</h1>
 
   <button class="home-btn" onclick="startGame()">▶ Start Game</button>
-  <button class="home-btn" onclick="showAchievements()">📊 Achievements</button>
+
+<!-- Rectangular Theme Button -->
+<button class="home-btn" onclick="toggleThemeMenu()">🎨 Theme</button>
+
+<!-- Horizontal Theme Options -->
+<div id="themeMenu">
+  <div class="theme-row">
+    <button onclick="selectTheme('city')">🏙</button>
+    <button onclick="selectTheme('night')">🌙</button>
+    <button onclick="selectTheme('sunny')">☀</button>
+  </div>
+</div>
+
+<button class="home-btn" onclick="showAchievements()">📊 Achievements</button>
   <button class="home-btn" onclick="exitGame()">❌ Exit</button>
 
-  <!-- Small Round Theme Button -->
-  <button id="themeToggle" class="small-round" onclick="toggleThemeMenu()">🎨</button>
-
-  <!-- Theme Row -->
-  <div id="themeMenu">
-    <div class="theme-row">
-      <button onclick="selectTheme('city')">🏙</button>
-      <button onclick="selectTheme('night')">🌙</button>
-      <button onclick="selectTheme('sunny')">☀</button>
-    </div>
-  </div>
+  
+  
 
   <!-- Small iAbout -->
   <button id="iaboutBtn" class="small-round" onclick="showIAbout()">ℹ</button>
@@ -439,3 +439,4 @@ loop();
 
 </body>
 </html>
+
