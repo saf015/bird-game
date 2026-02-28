@@ -40,6 +40,16 @@ canvas {
   font-size: 18px;
 }
 
+/* iABOUT BUTTON - bottom right */
+#iaboutBtn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  font-size: 14px;
+}
+
+/* THEME */
 #themeMenu {
   display: none;
 }
@@ -58,13 +68,8 @@ canvas {
   text-align: center;
 }
 
-#achievements button {
-  margin-top: 15px;
-  padding: 10px 20px;
-}
-
-/* ABOUT SCREEN */
-#aboutScreen {
+/* IABOUT SCREEN */
+#iaboutScreen {
   position: fixed;
   inset: 0;
   background: linear-gradient(#111,#333);
@@ -87,10 +92,6 @@ canvas {
   display: none;
 }
 
-#ui button {
-  margin-left: 5px;
-}
-
 /* GAME OVER */
 #retryBtn {
   position: fixed;
@@ -111,6 +112,7 @@ canvas {
 
 <body>
 
+<!-- HOME -->
 <div id="home">
   <h1>Flappy Bird</h1>
   <button onclick="startGame()">▶ Start Game</button>
@@ -124,6 +126,9 @@ canvas {
 
   <button onclick="showAchievements()">📊 Achievements</button>
   <button onclick="exitGame()">❌ Exit</button>
+
+  <!-- iABOUT BUTTON -->
+  <button id="iaboutBtn" onclick="showIAbout()">ℹ iAbout</button>
 </div>
 
 <!-- ACHIEVEMENTS -->
@@ -135,9 +140,9 @@ canvas {
   <button onclick="closeAchievements()">⬅ Back</button>
 </div>
 
-<!-- ABOUT -->
-<div id="aboutScreen">
-  <h2>👑 About Us</h2>
+<!-- IABOUT SCREEN -->
+<div id="iaboutScreen">
+  <h2>Founder</h2>
 
   <p><strong>Safani Fathima</strong></p>
   <p><strong>Sandhiya</strong></p>
@@ -145,18 +150,17 @@ canvas {
   <br>
 
   <p>
-    Flappy Bird is a fun and challenging arcade game.<br>
-    Tap to fly, avoid pipes, and beat your high score!
+    We created this game to make learning and coding fun.<br>
+    Our goal is to build creative and exciting projects together.
   </p>
 
   <br>
 
-  <button onclick="closeAbout()">⬅ Back</button>
+  <button onclick="closeIAbout()">⬅ Back</button>
 </div>
 
 <div id="ui">
   <button onclick="goHome()">⬅ Menu</button>
-  <button onclick="showAbout()">ℹ About</button>
 </div>
 
 <button id="retryBtn" onclick="retryGame()"></button>
@@ -232,7 +236,6 @@ function addPipe() {
   pipes.push({ x: GAME_WIDTH, top: Math.random() * 180 + 40, passed: false });
 }
 
-/* MEDAL SYSTEM */
 function getMedal(score) {
   if (score >= 30) return "🥇 Gold";
   if (score >= 15) return "🥈 Silver";
@@ -398,15 +401,14 @@ function closeAchievements() {
   document.getElementById("home").style.display = "flex";
 }
 
-function showAbout() {
-  playing = false;
-  bgMusic.pause();
-  document.getElementById("aboutScreen").style.display = "flex";
+function showIAbout() {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("iaboutScreen").style.display = "flex";
 }
 
-function closeAbout() {
-  document.getElementById("aboutScreen").style.display = "none";
-  document.getElementById("ui").style.display = "block";
+function closeIAbout() {
+  document.getElementById("iaboutScreen").style.display = "none";
+  document.getElementById("home").style.display = "flex";
 }
 
 function exitGame() {
