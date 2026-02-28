@@ -63,6 +63,21 @@ canvas {
   padding: 10px 20px;
 }
 
+/* ABOUT SCREEN */
+#aboutScreen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(#111,#333);
+  color: white;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 25;
+  text-align: center;
+  padding: 20px;
+}
+
 /* GAME UI */
 #ui {
   position: fixed;
@@ -70,6 +85,10 @@ canvas {
   right: 10px;
   z-index: 10;
   display: none;
+}
+
+#ui button {
+  margin-left: 5px;
 }
 
 /* GAME OVER */
@@ -113,16 +132,31 @@ canvas {
   <p id="medalInfo"></p>
   <p id="recentScore"></p>
   <p id="bestScore"></p>
-
-  <h3>👑 Founder</h3>
-  <p>Safani Fathima</p>
-  <p>Sandhiya</p>
-
   <button onclick="closeAchievements()">⬅ Back</button>
+</div>
+
+<!-- ABOUT -->
+<div id="aboutScreen">
+  <h2>👑 About Us</h2>
+
+  <p><strong>Safani Fathima</strong></p>
+  <p><strong>Sandhiya</strong></p>
+
+  <br>
+
+  <p>
+    Flappy Bird is a fun and challenging arcade game.<br>
+    Tap to fly, avoid pipes, and beat your high score!
+  </p>
+
+  <br>
+
+  <button onclick="closeAbout()">⬅ Back</button>
 </div>
 
 <div id="ui">
   <button onclick="goHome()">⬅ Menu</button>
+  <button onclick="showAbout()">ℹ About</button>
 </div>
 
 <button id="retryBtn" onclick="retryGame()"></button>
@@ -168,7 +202,6 @@ function loadTheme(name) {
   bgImg.src = themes[name].bg;
   birdImg.src = themes[name].bird;
 }
-
 loadTheme("city");
 
 /* SOUND */
@@ -176,7 +209,6 @@ const flapSound = new Audio("audio/flap.mp3");
 const hitSound = new Audio("audio/hit.mp3");
 const scoreSound = new Audio("audio/score.wav");
 const bgMusic = new Audio("audio/bg.mpeg");
-
 bgMusic.loop = true;
 bgMusic.volume = 0.5;
 
@@ -200,7 +232,7 @@ function addPipe() {
   pipes.push({ x: GAME_WIDTH, top: Math.random() * 180 + 40, passed: false });
 }
 
-/* MEDAL */
+/* MEDAL SYSTEM */
 function getMedal(score) {
   if (score >= 30) return "🥇 Gold";
   if (score >= 15) return "🥈 Silver";
@@ -364,6 +396,17 @@ function showAchievements() {
 function closeAchievements() {
   document.getElementById("achievements").style.display = "none";
   document.getElementById("home").style.display = "flex";
+}
+
+function showAbout() {
+  playing = false;
+  bgMusic.pause();
+  document.getElementById("aboutScreen").style.display = "flex";
+}
+
+function closeAbout() {
+  document.getElementById("aboutScreen").style.display = "none";
+  document.getElementById("ui").style.display = "block";
 }
 
 function exitGame() {
