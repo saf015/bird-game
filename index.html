@@ -187,6 +187,8 @@ canvas {
     Our goal is to build creative and exciting projects together.
   </p>
   <br>
+<p><strong>Version 1.0</strong></p>
+  <br>
   <button onclick="closeIAbout()">⬅ Back</button>
 </div>
 
@@ -343,7 +345,15 @@ function draw() {
   ctx.fillText("HIGH SCORE: " + highScore, 20, 40);
   ctx.fillText("SCORE: " + score, 20, 65);
 }
-
+// TAP TO PLAY MESSAGE
+  if (waiting && !gameOver) {
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = "white";
+    ctx.font = "bold 28px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("TAP TO PLAY", canvas.width / 2, canvas.height / 2);
+    ctx.textAlign = "left";
+  }
 function loop() {
   update();
   draw();
@@ -439,5 +449,6 @@ loop();
 
 </body>
 </html>
+
 
 
